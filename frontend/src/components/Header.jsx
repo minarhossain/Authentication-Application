@@ -5,7 +5,7 @@ const Header = () => {
     return (
         <div className="bg-slate-300 p-5">
             <div className='max-w-[1140px] mx-auto flex justify-between items-center'>
-                <h1>Auth App</h1>
+                <Link to=''><h1 className='text-2xl font-bold'>Auth App</h1></Link>
                 <ul className='flex items-center gap-5'>
 
                     <Link to=''>
