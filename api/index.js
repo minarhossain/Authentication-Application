@@ -1,7 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from "dotenv"
-
+import userRoute from './routes/user.route.js'
+import authRoute from './routes/auth.route.js'
 dotenv.config();
 
 const app = express();
@@ -10,9 +11,7 @@ const PORT = 5000;
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.status(200).json({ Name: "Minar Hossain", status: "Express Server started" })
-})
+
 
 async function main() {
     try {
@@ -26,3 +25,9 @@ async function main() {
     }
 }
 main()
+
+
+
+
+app.use('/api/user', userRoute)
+app.use('/api/auth', authRoute)
