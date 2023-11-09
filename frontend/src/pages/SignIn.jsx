@@ -1,21 +1,30 @@
 
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { signInFailure, signInStart, signInSuccess } from '../redux/user/userSlice';
 
 const SignIn = () => {
 
     const [formData, setFormData] = useState({});
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
+    // const [error, setError] = useState(null);
+    // const [loading, setLoading] = useState(false);
+
+    const { loading, error } = useSelector(state => state.user);
     const navigate = useNavigate();
+
+    const dispatch = useDispatch()
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
     }
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            setLoading(true);
-            setError(false);
+            //setLoading(true);
+            dispatch(signInStart());
+
+            //setError(false);
             const response = await fetch('/api/auth/signin', {
                 method: 'POST',
                 headers: {
@@ -25,16 +34,19 @@ const SignIn = () => {
 
             });
             const data = await response.json();
-            setLoading(false);
+            // setLoading(false);
             if (data.success === false) {
-                setError(true);
+                // setError(true);
+                dispatch(signInFailure(data));
                 return;
             }
+            dispatch(signInSuccess(data))
             navigate('/')
 
         } catch (error) {
-            setLoading(false);
-            setError(true);
+            // setLoading(false);
+            dispatch(signInFailure(error));
+            // setError(true);
         }
     }
     return (
@@ -68,7 +80,9 @@ const SignIn = () => {
                 </Link>
 
             </div>
-            <p className='text-red-600 font-bold mt-5'>{error && 'Something Went Wrong'}</p>
+            <p className='text-red-600 font-bold mt-5'>
+                {error ? error.message || 'Something Went Wrong' : ""}
+            </p>
         </div>
     );
 };
